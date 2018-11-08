@@ -5,7 +5,7 @@ defmodule LaunchEditor.MixProject do
     [
       app: :launcheditor,
       version: "0.1.0",
-      elixir: "~> 1.7",
+      elixir: "~> 1.4",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -21,7 +21,7 @@ defmodule LaunchEditor.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:plug, "~> 1.0"},
+      {:plug, "~> 1.0"}
     ]
   end
 end
