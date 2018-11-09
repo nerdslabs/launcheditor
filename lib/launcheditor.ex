@@ -13,7 +13,7 @@ defmodule LaunchEditor do
     run(os_name, params)
   end
 
-  def run(:darwin, params) do
+  def run(platform, params) when platform in [:darwin, :linux] do
     {processes, _} = System.cmd("ps", ["x"])
 
     Enum.find(Editors.osx(), fn {process, _executable} ->
