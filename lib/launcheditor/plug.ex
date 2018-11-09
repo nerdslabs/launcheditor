@@ -16,6 +16,8 @@ defmodule LaunchEditor.Plug do
     end
   end
 
+  def call(conn, _), do: conn
+
   def allowed(["__open-in-editor"]), do: true
   def allowed(_), do: false
 
