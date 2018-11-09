@@ -17,7 +17,7 @@ defmodule LaunchEditor do
     {processes, _} = System.cmd("ps", ["x"])
 
     Enum.find(Editors.osx(), fn {process, _executable} ->
-      String.contains?(processes, Atom.to_string(process))
+      String.contains?(processes, process)
     end)
     |> case do
       nil ->

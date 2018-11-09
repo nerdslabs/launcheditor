@@ -3,8 +3,6 @@ defmodule LaunchEditor.Plug do
   alias Plug.Conn
 
   def init(options) do
-    # initialize options
-
     %{
       assets_root: Keyword.get(options, :assets_root, "")
     }
