@@ -16,16 +16,16 @@ defmodule LaunchEditor do
   def run(platform, params) when platform in [:darwin, :linux] do
     {processes, _} = System.cmd("ps", ["x"])
 
-    Enum.find(Editors.osx(), fn {process, _executable} ->
+    Enum.find(Editors.osx(), fn {process, _exec} ->
       String.contains?(processes, process)
     end)
     |> case do
       nil ->
         {:error, "Don't found running supported editor."}
 
-      {_process, executable} ->
+      {_process, exec} ->
         file = Map.get(params, :file)
-        System.cmd(executable, [file])
+        System.cmd(exec, [file])
 
         {:ok, "File \"#{file}\" opened in your editor."}
     end
