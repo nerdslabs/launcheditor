@@ -31,6 +31,21 @@ defmodule LaunchEditor do
     end
   end
 
+  def run(platform, params) when platform in [:nt] do
+    {processes, _} =
+      System.cmd("cmd.exe", ["/c", "powershell", "-Command", "Get-Process | Select-Object Path"])
+
+    with editor when not is_nil(editor) <-
+           Enum.find(Editors.windows(), &String.contains?(processes, &1)),
+         processes when is_list(processes) <- String.split(processes, "\r\n"),
+         exec when not is_nil(exec) <- Enum.find(processes, &String.contains?(&1, editor)) do
+      file = Map.get(params, :file)
+      System.cmd("cmd.exe", ["/c", String.trim(exec), file])
+    else
+      _ -> {:error, "Don't found running supported editor."}
+    end
+  end
+
   def run(platform, _params) do
     {:error, "Platform #{Atom.to_string(platform)} not supported yet."}
   end

@@ -2,7 +2,7 @@
 
 [![Travis](https://img.shields.io/travis/nerdslabs/launcheditor.svg)](https://travis-ci.org/nerdslabs/launcheditor) ![Docs](https://img.shields.io/badge/version-WIP-e75734.svg)
 
-**_WIP - Currently works only on OSX and Linux_**
+**_WIP_**
 
 **Open file in editor from Elixir with Plug.**
 
