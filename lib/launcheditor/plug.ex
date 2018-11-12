@@ -10,15 +10,13 @@ defmodule LaunchEditor.Plug do
 
   def call(%Conn{method: "GET", path_info: ["__open-in-editor"]} = conn, opts) do
     query = Plug.Conn.Query.decode(conn.query_string)
+    line = Map.get(query, "line", nil)
 
     Map.get(query, "file", "")
     |> get_file_path(opts)
     |> case do
       {:ok, path} ->
-        LaunchEditor.run(%{
-          file: path,
-          line: Map.get(query, "line", nil)
-        })
+        LaunchEditor.run(path, line)
         |> send_response(conn)
 
       {:error, message} ->
