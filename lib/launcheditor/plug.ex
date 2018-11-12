@@ -8,29 +8,28 @@ defmodule LaunchEditor.Plug do
     }
   end
 
-  def call(%Conn{method: "GET"} = conn, opts) do
-    if allowed(conn.path_info) do
-      launch_editor(conn, opts)
-    else
-      conn
+  def call(%Conn{method: "GET", path_info: ["__open-in-editor"]} = conn, opts) do
+    query = Plug.Conn.Query.decode(conn.query_string)
+
+    Map.get(query, "file", "")
+    |> get_file_path(opts)
+    |> case do
+      {:ok, path} ->
+        LaunchEditor.run(%{
+          file: path,
+          line: Map.get(query, "line", nil)
+        })
+        |> send_response(conn)
+
+      {:error, message} ->
+        send_response({:error, message}, conn)
     end
   end
 
   def call(conn, _), do: conn
 
-  def allowed(["__open-in-editor"]), do: true
-  def allowed(_), do: false
-
-  def launch_editor(conn, opts) do
-    query = Plug.Conn.Query.decode(conn.query_string)
-
-    params = %{
-      file: Map.get(opts, :assets_root) |> Path.join(Map.get(query, "file", "")),
-      line: Map.get(query, "line", nil)
-    }
-
-    LaunchEditor.run(params)
-    |> case do
+  def send_response(result, conn) do
+    case result do
       {:ok, message} ->
         conn
         |> put_resp_content_type("text/plain")
@@ -40,8 +39,19 @@ defmodule LaunchEditor.Plug do
       {:error, message} ->
         conn
         |> put_resp_content_type("text/plain")
-        |> send_resp(500, message)
+        |> send_resp(400, message)
         |> halt()
+    end
+  end
+
+  def get_file_path(file, opts) do
+    relative_path = Path.relative_to_cwd(file)
+    assets_path = Map.get(opts, :assets_root) |> Path.join(relative_path)
+
+    cond do
+      File.exists?(relative_path) -> {:ok, relative_path}
+      File.exists?(assets_path) -> {:ok, assets_path}
+      true -> {:error, "File \"#{relative_path}\" not exists"}
     end
   end
 end
