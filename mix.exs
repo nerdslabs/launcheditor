@@ -19,7 +19,7 @@ defmodule LaunchEditor.MixProject do
   defp docs do
     [
       extras: ["README.md"],
-      main: "README"
+      main: "readme"
     ]
   end
 
