@@ -1,10 +1,24 @@
 defmodule LaunchEditor do
+  @moduledoc """
+  This module can run specific file in currently working IDE.
+  """
+
   alias LaunchEditor.Editors
 
+  @doc """
+  Check current operating system for IDE detection.
+  """
   def os() do
     :os.type()
   end
 
+  @doc """
+  Open file in your current IDE, you can also select a specific line if IDE supports it.
+
+  ```
+  LaunchEditor.run("lib/some_file.ex", 10)
+  ```
+  """
   def run(file, line \\ 0) do
     {_os_family, os_name} = os()
 

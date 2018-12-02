@@ -1,13 +1,24 @@
 defmodule LaunchEditor.Plug do
+  @moduledoc """
+  Open file in your IDE from URL `/__open-in-editor?file=file.ex&line=0`.
+
+  Add our `LaunchEditor.Plug` to your application. You can set assets path if it's other than root `/`.
+  ```
+  plug LaunchEditor.Plug, assets_root: "assets/"
+  ```
+  """
+
   import Plug.Conn
   alias Plug.Conn
 
+  @doc false
   def init(options) do
     %{
       assets_root: Keyword.get(options, :assets_root, "")
     }
   end
 
+  @doc false
   def call(%Conn{method: "GET", path_info: ["__open-in-editor"]} = conn, opts) do
     query = Plug.Conn.Query.decode(conn.query_string)
     line = Map.get(query, "line", nil)
@@ -26,7 +37,7 @@ defmodule LaunchEditor.Plug do
 
   def call(conn, _), do: conn
 
-  def send_response(result, conn) do
+  defp send_response(result, conn) do
     case result do
       {:ok, message} ->
         conn
@@ -42,7 +53,7 @@ defmodule LaunchEditor.Plug do
     end
   end
 
-  def get_file_path(file, opts) do
+  defp get_file_path(file, opts) do
     relative_path = Path.relative_to_cwd(file)
     assets_path = Map.get(opts, :assets_root) |> Path.join(relative_path)
 
