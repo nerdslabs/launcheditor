@@ -29,7 +29,7 @@ defmodule LaunchEditor.MixProject do
 
   defp deps do
     [
-      {:ex_doc, "~> 0.12", only: [:dev, :test, :docs]},
+      {:ex_doc, "~> 0.12", only: [:dev, :docs]},
       {:plug, "~> 1.0"}
     ]
   end
